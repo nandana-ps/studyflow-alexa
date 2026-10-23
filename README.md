@@ -1,6 +1,6 @@
 # StudyFlow
 
-StudyFlow is a polished, Alexa+-inspired student productivity dashboard built for the Amazon Developer Hackathon. It is a **browser-based simulation**, not an Alexa skill, an Amazon product, or a real Alexa integration. The local study buddy uses transparent, predefined intent handling; it does not call an AI service.
+StudyFlow is a student productivity web app and an **Alexa+-inspired simulated experience** for the Amazon Developer Hackathon. The animated orb and conversational UI are a browser-based design exercise: this is **not** an Alexa skill, does not connect to an Alexa device, and does not use Amazon private services. Its assistant uses transparent, local intent handling; no AI API, key, backend, or paid service is required.
 
 ## Run locally
 
@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite (usually `http://localhost:5173`). To create and preview a production build:
+Open the local URL printed by Vite, usually `http://localhost:5173`. Create and preview a production build with:
 
 ```powershell
 npm run build
@@ -20,24 +20,29 @@ npm run preview
 
 ## Features
 
-- A responsive dark dashboard with task counts, completion progress, due-today stats, and a daily schedule view.
-- Create, edit, complete, filter, search, and delete tasks, including subject, priority, and due date.
-- A local study buddy with working quick actions for day planning, exam revision checklists, and progress updates.
-- A 25-minute focus timer with pause and reset controls.
-- Sample tasks on first launch, a clear-all action, useful empty states, storage-error messaging, and lightweight notifications.
-- Tasks and recent chat history persist in the browser using `localStorage`.
+- A responsive dark dashboard with purple and cyan accents, animated assistant orb, task list, progress statistics, schedule, and 25-minute focus timer.
+- Conversational task actions: add tasks (including priority, subject, and due date), rename, complete, and delete tasks. The assistant asks follow-up questions when a task name or exam subject is missing.
+- A daily study schedule based on pending task priorities and deadlines, plus a practical exam revision checklist added to the task list.
+- Context-aware progress summaries for completed, pending, overdue, and due-today tasks.
+- Browser microphone input when the Web Speech API is available, with a text input fallback. Microphone permission is requested by the browser when voice input is started.
+- Optional browser text-to-speech for assistant replies, with a per-message speak button.
+- Task and recent conversation persistence through `localStorage`; first-launch sample tasks, search and priority filters, task editor, empty states, and storage error feedback.
 
-## Assistant behavior and limitations
+## Supported browser features and limitations
 
-The assistant recognizes a small set of local intents (planning, exam/revision preparation, progress, and help) and otherwise explains the supported actions. It is not generative AI and has no external API, backend, account sync, Alexa device connection, or cross-browser persistence. Exam preparation asks for a subject in a browser prompt and adds practical checklist tasks to the task list. Data stays in the current browser profile; clearing browser storage removes it. If browser storage is unavailable, the app reports the save error.
+Speech recognition uses the browser's Web Speech API (`SpeechRecognition` or `webkitSpeechRecognition`), which is not available in every browser and may require a secure context and microphone permission. When unavailable or denied, use the text box. Recognition is provided by the browser and may rely on the browser vendor's speech service; StudyFlow itself does not send speech to an AI assistant.
+
+Spoken responses use the browser's `speechSynthesis` API. Availability and voice quality depend on the browser and installed system voices. Spoken replies are optional and can be enabled or disabled in the assistant panel.
+
+The local assistant understands a limited set of intents and phrasings rather than arbitrary conversation. Task data and chat history stay in the current browser profile and are lost if its site storage is cleared. There is no account sync, remote backup, Alexa device integration, real Alexa service, or generative AI.
 
 ## Architecture
 
-- **React 18** renders the dashboard, task editor, schedule, chat, and focus timer.
-- **Vite** provides the development server and production bundler.
-- **JavaScript and CSS** implement app state, responsive styling, and the local intent router; there is no component library or runtime API dependency.
-- **`localStorage`** persists task and chat state. First-run sample tasks are generated only when no task data has been saved.
-- **`src/App.jsx`** contains the app and its local interactions; **`src/styles.css`** contains the responsive visual system; **`src/main.jsx`** mounts the app.
+- **React 18** renders the existing dashboard, conversational assistant, task editor, schedule, and focus timer.
+- **Vite** is retained for the development server and production bundler.
+- **JavaScript and CSS** provide task state, local intent routing, browser speech APIs, and responsive presentation. No additional runtime packages are required.
+- **`localStorage`** persists tasks and recent chat. Task actions from the assistant update the same React task state as the dashboard controls.
+- **`src/App.jsx`** contains the application state and assistant behavior; **`src/styles.css`** contains the visual system and responsive styling; **`src/main.jsx`** mounts React.
 
 ## Project scripts
 
